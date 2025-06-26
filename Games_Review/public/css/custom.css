@@ -1,0 +1,100 @@
+body {
+    background: #311432;
+    
+}
+.text-gold{
+    color: #E6C972;
+
+}
+
+.borda-inferior {
+    border-bottom: 2px solid #d5a103;
+}
+
+.card {
+    border-radius: 10px;
+}
+.card-body {
+    padding: 2rem;
+    background-color: #55076d;
+    border-radius: 1.5rem;
+    border: 2px solid #E6C972;
+
+}
+.card-title {
+    margin-bottom: 1.5rem;
+    color: #E6C972
+}
+.btn-primary {
+    background-color: #710193;
+    border-color: #710193;
+}
+.btn-primary:hover {
+    background-color: #E6C972;
+    border-color: #4b0161;
+    color: #4b0161;
+}
+
+.btn-secundary {
+    background-color: #19c901;
+    border-color: #19c901;
+    color: #fff
+}
+.btn-secundary:hover {
+    background-color: #E6C972;
+    border-color: #4b0161;
+    color: #4b0161;
+}
+
+.bg-primary {
+    background-color: #4b0161 !important;
+}
+
+.bg-secondary {
+    color: #E6C972 !important;
+}
+
+.pixel-font {
+  font-family: 'Press Start 2P', cursive;
+  
+}
+
+.custom-search-input {
+    border: 2px solid #000;
+    border-radius: 12px;
+    background-color: #9e00ce;
+    padding: 10px 16px;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+    color:#e89dff
+}
+
+.custom-search-input:focus {
+    border-color: #9e00ceba;
+    box-shadow: 0 0 0 0.2rem rgba(137, 13, 253, 0.25);
+    background-color: #9e00ceba;
+    color:#e89dff
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: auto;
+    border: 2px solid #9e00ceba; /* opcional */
+}
+
+.game-cover {
+    width: 150px;         /* ou qualquer valor desejado */
+    height: auto;         /* mantém a proporção */
+    object-fit: auto;    /* ajusta o conteúdo da imagem */
+    border-radius: 8px;   /* se não usar a classe rounded do Bootstrap */
+}
+
+
+
+
+
+
+
+    

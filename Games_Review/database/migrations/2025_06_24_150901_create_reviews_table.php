@@ -20,12 +20,14 @@ return new class extends Migration
             $table->unsignedTinyInteger('game_rating'); // 1-10
             $table->string('game_status'); // exemplo: "Publicado", "Rascunho"
             $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('platform_id');
             $table->integer('review_likes')->default(0);
             $table->integer('game_duration')->nullable(); // em minutos
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('category')->onDelete('cascade');
+            $table->foreign('platform_id')->references('id')->on('platforms')->onDelete('cascade');
         });
 
     }
