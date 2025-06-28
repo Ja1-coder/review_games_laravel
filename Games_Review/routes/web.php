@@ -25,5 +25,7 @@ Route::put('/perfil', [UserController::class, 'update'])->name('postPerfil');
 Route::post('/reviews/create', [ReviewController::class, 'store'])->name('createReview');
 Route::post('/review/{id}/like', [ReviewController::class, 'toggleLike'])->name('reviews.like');
 Route::delete('/reviews/{id}', [ReviewController::class, 'destroy'])->name('deleteReview');
+Route::put('/reviews/{id}', [ReviewController::class, 'update'])->name('reviews.update');
+
 
 

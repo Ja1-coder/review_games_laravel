@@ -104,16 +104,18 @@
                         @if(Auth::check() && $analise->user->user_gamertag == Auth::user()->user_gamertag)
                             <div class="col text-end">
                                 <div class="d-flex justify-content-end gap-2">
-                                    <a href="#" class="btn btn-outline-light btn-sm">
-                                        <i class="bi bi-pencil"></i> Editar
-                                    </a>
+                                    @include('Modal.editReview')
                                     @include('Modal.deleteReview')
                                 </div>
                             </div>
                         @endif
 
                     </div>
-                    
+
+                    <div class="mb-3 mt-2">
+                        <span class="text-light fw-bold fs-5">Nota: {{ $analise->game_rating }}/10</span>
+                    </div>
+    
                     <p class="text-light mb-4 mt-2">
                         {{ $analise->game_description }}
                     </p>
@@ -187,6 +189,74 @@
             }
         });
     });
+
+
+    $(document).on('click', '.btn-confirm-delete', function () {
+        const reviewId = $(this).data('id');
+        const url = $(this).data('url');
+
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            success: function () {
+                $('#modalExcluirReview' + reviewId).modal('hide');
+
+                // Remover o container da análise com segurança
+                $('#modalExcluirReview' + reviewId)
+                    .closest('.card-body')
+                    .remove();
+            },
+            error: function (xhr) {
+                console.error(xhr);
+                alert('Erro ao excluir análise.');
+            }
+        });
+    });
+
+
+    $(document).on('submit', '.formEditarReview', function (e) {
+        e.preventDefault();
+
+        const form = $(this);
+        const reviewId = form.data('id');
+        const url = `/reviews/${reviewId}`; // ou use `form.attr('action')` se preferir
+
+        $.ajax({
+            url: url,
+            method: 'POST', // Laravel usa POST com `_method=PUT` para simular PUT
+            data: form.serialize(),
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                $('#modalEditarReview' + reviewId).modal('hide');
+                alert('Análise atualizada com sucesso!');
+                location.reload(); // ou atualizar dinamicamente se desejar
+            },
+            error: function (xhr) {
+                console.error(xhr);
+                let msg = 'Erro ao editar análise:\n';
+
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    const errors = xhr.responseJSON.errors;
+                    for (const campo in errors) {
+                        msg += `- ${errors[campo][0]}\n`;
+                    }
+                } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                    msg += `- ${xhr.responseJSON.message}`;
+                } else {
+                    msg += `- ${xhr.status} ${xhr.statusText}`;
+                }
+
+                alert(msg);
+            }
+        });
+    });
+
+
 </script>
 </body>
 </html>

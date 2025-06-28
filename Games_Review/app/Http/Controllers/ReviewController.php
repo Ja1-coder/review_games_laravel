@@ -80,4 +80,30 @@ class ReviewController extends Controller
         return response()->json(['message' => 'Análise excluída com sucesso.']);
     }
 
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'game_title' => 'required|string|max:255',
+            'game_image' => 'nullable|url',
+            'game_rating' => 'required|integer|min:1|max:10',
+            'game_status' => 'required|string',
+            'category_id' => 'required|exists:category,id',
+            'platform_id' => 'required|exists:platforms,id',
+            'game_duration' => 'nullable|string|max:20',
+            'game_description' => 'required|string',
+        ]);
+
+        $review = Review::findOrFail($id);
+
+        // opcional: validar se o usuário é o dono
+        if ($review->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Acesso negado.'], 403);
+        }
+
+        $review->update($request->all());
+
+        return response()->json(['message' => 'Análise atualizada com sucesso.']);
+    }
+
+
 }
