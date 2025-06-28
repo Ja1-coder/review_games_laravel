@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('user_name');
             $table->string('user_email')->unique();
-            $table->string('user_gametag')->unique();
+            $table->string('user_gamertag')->unique();
             $table->string('user_image');
             $table->string('password');
             $table->rememberToken();

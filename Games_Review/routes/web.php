@@ -18,5 +18,12 @@ Route::get('/cadastro', [SignUpController::class, 'index'])->name('cadastro');
 Route::post('/cadastro', [SignUpController::class, 'create'])->name('postCadastro');
 
 /*---------------Rotas do Usuário----------------*/
-
 Route::get('/perfil/{slug}', [UserController::class, 'index'])->name('perfil');
+Route::put('/perfil', [UserController::class, 'update'])->name('postPerfil');
+
+/*---------------Rotas das Reviews----------------*/
+Route::post('/reviews/create', [ReviewController::class, 'store'])->name('createReview');
+Route::post('/review/{id}/like', [ReviewController::class, 'toggleLike'])->name('reviews.like');
+Route::delete('/reviews/{id}', [ReviewController::class, 'destroy'])->name('deleteReview');
+
+

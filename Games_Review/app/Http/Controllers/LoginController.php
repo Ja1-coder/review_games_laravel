@@ -23,7 +23,7 @@ class LoginController extends Controller
 
         // Buscar usuário por email OU gametag
         $user = User::where('user_email', $request->login)
-                    ->orWhere('user_gametag', $request->login)
+                    ->orWhere('user_gamertag', $request->login)
                     ->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {

@@ -15,6 +15,7 @@
     <!-- Meu Css -->
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
 <body>
@@ -37,8 +38,7 @@
             </form>
 
             <!-- Nova Análise -->
-            <button type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#novaAnaliseModal"> Nova Análise
-            </button>
+            @include('Modal.createReview')
 
             <!-- Ícone do usuário -->
             @if (Auth::check())
@@ -51,7 +51,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownPerfil">
                             <li>
-                                <a class="dropdown-item" href="{{ route('perfil', ['slug' => Auth::user()->user_gametag]) }}">
+                                <a class="dropdown-item" href="{{ route('perfil', ['slug' => Auth::user()->user_gamertag]) }}">
                                     Meu Perfil
                                 </a>
                             </li>
@@ -86,58 +86,107 @@
     <!-- Cards de análises -->
     <div class="container mt-5">
         <div class="row row-cols-1 g-4">
-
             <!-- Cards -->
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-auto">
-                        <img src="https://m.media-amazon.com/images/I/91kaE4XaeLL._AC_UY327_FMwebp_QL65_.jpg" alt="Zelda" class="game-cover rounded">
-                    </div>
-                    <div class="col">
-                        <h5 class="card-title mb-2">The Legend of Zelda: Tears of the Kingdom</h5>
-                        <div class="mb-3">
-                            <span class="badge bg-secondary me-2">Nintendo Switch</span>
-                            <span class="badge badge-outline">Aventura</span>
+            @foreach($analises as $analise)
+                <div class="card-body">
+                    <div class="row align-items-start">
+                        <div class="col-auto">
+                            <img src="{{ $analise->game_image }}" alt="{{ $analise->game_title }}" class="game-cover rounded">
                         </div>
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <span class="text-light fw-bold fs-5">Nota: 4.8/10</span>
+
+                        <div class="col">
+                            <h5 class="card-title mb-2">{{ $analise->game_title }}</h5>
+                            <div class="mb-3">
+                                <span class="badge bg-secondary me-2">{{ $analise->plataforma->name ?? 'Plataforma Desconhecida' }}</span>
+                                <span class="badge badge-outline">{{ $analise->categoria->name ?? 'Categoria Desconhecida' }}</span>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                
-                <p class="text-light mb-4 mt-2">
-                    Uma obra-prima absoluta! A liberdade criativa que o jogo oferece é impressionante. 
-                    O sistema de construção revoluciona completamente a gameplay, permitindo soluções únicas 
-                    para cada desafio...
-                </p>
-                
-                <div class="d-flex align-items-center justify-content-between pt-3 border-top border-purple">
-                    <div class="d-flex align-items-center">
-                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b647?w=32&amp;h=32&amp;fit=crop&amp;crop=face" alt="Marina" class="rounded-circle me-2" width="32" height="32">
-                        <div>
-                            <div class="text-light fw-medium">Marina Silva</div>
-                            <small class="text-light">@marinagamer</small>
-                        </div>
+                        @if(Auth::check() && $analise->user->user_gamertag == Auth::user()->user_gamertag)
+                            <div class="col text-end">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="#" class="btn btn-outline-light btn-sm">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </a>
+                                    @include('Modal.deleteReview')
+                                </div>
+                            </div>
+                        @endif
+
                     </div>
                     
-                    <div class="d-flex align-items-center text-light small">
-                        <span class="me-3">
-                            <i class="bi bi-clock me-1"></i> 45h
-                        </span>
-                        <span class="me-3">
-                            <i class="bi bi-calendar me-1"></i> 2 dias atrás
-                        </span>
-                        <span class="me-3 cursor-pointer hover-red">
-                            <i class="bi bi-heart me-1"></i> 127
-                        </span>
-                        <span class="cursor-pointer hover-purple">
-                            <i class="bi bi-chat me-1"></i> 23
-                        </span>
+                    <p class="text-light mb-4 mt-2">
+                        {{ $analise->game_description }}
+                    </p>
+                    
+                    <div class="d-flex align-items-center justify-content-between pt-3 border-top border-purple">
+                        <div class="d-flex align-items-center">
+                            <img src="{{$analise->user->user_image}}" alt="{{$analise->user->user_name}}" class="rounded-circle me-2" width="32" height="32">
+                            <div>
+                                <div class="text-light fw-medium">{{ $analise->user->user_name }}</div>
+                                <small class="text-light">{{ $analise->user->user_gamertag }}</small>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex align-items-center text-light small">
+                            <span class="me-3">
+                                <i class="bi bi-clock me-1"></i> {{$analise->game_duration}}h
+                            </span>
+                            <span class="me-3">
+                                <i class="bi bi-calendar me-1"></i> {{ $analise->created_at->diffForHumans() }}
+                            </span>
+                            <span class="me-3 cursor-pointer hover-red like-button" 
+                                data-id="{{ $analise->id }}"
+                                data-liked="{{ auth()->check() && auth()->user()->likes->contains('review_id', $analise->id) ? '1' : '0' }}">
+
+                                <i class="bi 
+                                    {{ auth()->check() && auth()->user()->likes->contains('review_id', $analise->id) 
+                                        ? 'bi-heart-fill text-danger' 
+                                        : 'bi-heart' }}">
+                                </i>
+
+                                <span class="like-count">{{ $analise->review_likes }}</span>
+                            </span>
+
+                            <span class="cursor-pointer hover-purple">
+                                <i class="bi bi-chat me-1"></i> 23
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endforeach
         </div>
     </div>
+<script>
+    $('.like-button').on('click', function () {
+        const span = $(this);
+        const reviewId = span.data('id');
+        const liked = span.data('liked');
 
+        $.ajax({
+            url: `/review/${reviewId}/like`,
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                // Atualiza o número de likes
+                span.find('.like-count').text(response.likes);
+
+                // Troca o ícone
+                const icon = span.find('i');
+                if (response.liked) {
+                    icon.removeClass('bi-heart').addClass('bi-heart-fill text-danger');
+                    span.data('liked', 1);
+                } else {
+                    icon.removeClass('bi-heart-fill text-danger').addClass('bi-heart');
+                    span.data('liked', 0);
+                }
+            },
+            error: function() {
+                console.error('Erro ao enviar like');
+            }
+        });
+    });
+</script>
 </body>
 </html>

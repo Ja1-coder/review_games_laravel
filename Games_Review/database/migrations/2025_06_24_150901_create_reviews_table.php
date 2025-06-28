@@ -16,9 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('game_title');
             $table->longText('game_description');
-            $table->string('game_image')->nullable();
+            $table->string('game_image', 2048);
             $table->unsignedTinyInteger('game_rating'); // 1-10
-            $table->string('game_status'); // exemplo: "Publicado", "Rascunho"
+            $table->string('game_status'); // exemplo: "Jogando", "Finalizado", "Abandonado"
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('platform_id');
             $table->integer('review_likes')->default(0);

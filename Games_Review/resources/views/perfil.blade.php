@@ -47,15 +47,17 @@
                             <img id="avatar" src="{{ auth()->user()->user_image }}" alt="Marina" class="rounded-circle" width="100" height="100">
                             <p class="text-light fw-medium fs-3 mb-0">{{ auth()->user()->user_name }}</p>
                         </div>
-                        <div class="d-flex align-items-center gap-3">
-                            <form action="#" class="w-100">
+                        <div class="d-flex  align-items-center gap-3">
+                            <form action="{{ route('postPerfil') }}" method="POST" class="w-100">
+                                @csrf
+                                @method('PUT')
                                 <div class="mb-4">
                                     <label for="nome" class="text-light fw-medium fs-6 mb-2">Nome</label>
                                     <input type="text" name="nome" id="nome" class="form-control w-50" value="{{ auth()->user()->user_name }}">
                                 </div>
                                 <div class="mb-4">
-                                    <label for="gametag" class="text-light fw-medium fs-6 mb-2">Gamertag</label>
-                                    <input type="text" name="gametag" id="gametag" class="form-control w-50" value="{{ auth()->user()->user_gametag }}">
+                                    <label for="gamertag" class="text-light fw-medium fs-6 mb-2">Gamertag</label>
+                                    <input type="text" name="gamertag" id="gamertag" class="form-control w-50" value="{{ auth()->user()->user_gamertag }}">
                                 </div>
                                 <div class="mb-4">
                                     <label for="email" class="text-light fw-medium fs-6 mb-2">E-mail</label>
@@ -87,7 +89,7 @@
                         <div class="d-flex align-items-center gap-3">
                             <div class="card-body d-flex flex-column align-items-center">
                                 <div>
-                                    <span class="fw-bold text-light">3</span>
+                                    <span class="fw-bold text-light">{{$numeroAnalises}}</span>
                                 </div>
                                 <div>
                                     <span class="fw-bold text-light">Número de análises</span>
@@ -95,7 +97,7 @@
                             </div>
                             <div class="card-body d-flex flex-column align-items-center">
                                 <div>
-                                    <span class="fw-bold text-light">3</span>
+                                    <span class="fw-bold text-light">{{$numeroCurtidas}}</span>
                                 </div>
                                 <div>
                                     <span class="fw-bold text-light">Número de curtidas</span>
@@ -103,7 +105,7 @@
                             </div>
                             <div class="card-body d-flex flex-column align-items-center">
                                 <div>
-                                    <span class="fw-bold text-light">3</span>
+                                    <span class="fw-bold text-light">0</span>
                                 </div>
                                 <div>
                                     <span class="fw-bold text-light">Número de comentários</span>
@@ -112,54 +114,69 @@
                         </div>
                         <div class="w-100">
                             <!-- Card -->
-                            <div class="card-body mt-3">
-                                <div class="row">
-                                    <div class="col-auto">
-                                        <img src="https://m.media-amazon.com/images/I/91kaE4XaeLL._AC_UY327_FMwebp_QL65_.jpg" alt="Zelda" class="game-cover rounded">
+                            @foreach($minhasReviews as $analise)
+                                <div class="card-body mt-3">
+                                    <div class="row align-items-start">
+                                        <div class="col-auto">
+                                            <img src="{{ $analise->game_image }}" alt="{{ $analise->game_title }}" class="game-cover rounded">
+                                        </div>
+
+                                        <div class="col">
+                                            <h5 class="card-title mb-2">{{ $analise->game_title }}</h5>
+                                            <div class="mb-3">
+                                                <span class="badge bg-secondary me-2">{{ $analise->plataforma->name ?? 'Plataforma Desconhecida' }}</span>
+                                                <span class="badge badge-outline">{{ $analise->categoria->name ?? 'Categoria Desconhecida' }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col text-end">
+                                            <div class="d-flex justify-content-end gap-2">
+                                                <a href="#" class="btn btn-outline-light btn-sm">
+                                                    <i class="bi bi-pencil"></i> Editar
+                                                </a>
+                                                @include('Modal.deleteReview')
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col">
-                                        <h5 class="card-title mb-2">The Legend of Zelda: Tears of the Kingdom</h5>
-                                        <div class="mb-3">
-                                            <span class="badge bg-secondary me-2">Nintendo Switch</span>
-                                            <span class="badge badge-outline">Aventura</span>
-                                        </div>
-                                        <div class="d-flex align-items-center justify-content-between mb-3">
-                                            <span class="text-light fw-bold fs-5">Nota: 4.8/10</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <p class="text-light mb-4 mt-2">
-                                    Uma obra-prima absoluta! A liberdade criativa que o jogo oferece é impressionante. 
-                                    O sistema de construção revoluciona completamente a gameplay, permitindo soluções únicas 
-                                    para cada desafio...
-                                </p>
-                                
-                                <div class="d-flex align-items-center justify-content-between pt-3 border-top border-purple">
-                                    <div class="d-flex align-items-center">
-                                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b647?w=32&amp;h=32&amp;fit=crop&amp;crop=face" alt="Marina" class="rounded-circle me-2" width="32" height="32">
-                                        <div>
-                                            <div class="text-light fw-medium">Marina Silva</div>
-                                            <small class="text-light">@marinagamer</small>
-                                        </div>
+
+
+                                    <div class="mb-3 mt-2">
+                                        <span class="text-light fw-bold fs-5">Nota: {{ $analise->game_rating }}/10</span>
                                     </div>
                                     
-                                    <div class="d-flex align-items-center text-light small">
-                                        <span class="me-3">
-                                            <i class="bi bi-clock me-1"></i> 45h
-                                        </span>
-                                        <span class="me-3">
-                                            <i class="bi bi-calendar me-1"></i> 2 dias atrás
-                                        </span>
-                                        <span class="me-3 cursor-pointer hover-red">
-                                            <i class="bi bi-heart me-1"></i> 127
-                                        </span>
-                                        <span class="cursor-pointer hover-purple">
-                                            <i class="bi bi-chat me-1"></i> 23
-                                        </span>
+                                    <p class="text-light mb-4 mt-2">
+                                        {{ $analise->game_description }}
+                                    </p>
+                                    
+                                    <div class="d-flex align-items-center justify-content-between pt-3 border-top border-purple">
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{$analise->user->user_image}}" alt="{{$analise->user->user_name}}" class="rounded-circle me-2" width="32" height="32">
+                                            <div>
+                                                <div class="text-light fw-medium">{{ $analise->user->user_name }}</div>
+                                                <small class="text-light">{{ $analise->user->user_gamertag }}</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-flex align-items-center text-light small">
+                                            <span class="me-3">
+                                                <i class="bi bi-clock me-1"></i> {{$analise->game_duration}}h
+                                            </span>
+                                            <span class="me-3">
+                                                <i class="bi bi-calendar me-1"></i> {{ $analise->created_at->diffForHumans() }}
+                                            </span>
+                                            <span class="me-3 cursor-pointer hover-red like-button" 
+                                                data-id="{{ $analise->id }}"
+                                                data-liked="{{ auth()->user()->likes->contains('review_id', $analise->id) ? '1' : '0' }}">
+                                                <i class="bi {{ auth()->user()->likes->contains('review_id', $analise->id) ? 'bi-heart-fill text-danger' : 'bi-heart' }}"></i>
+                                                <span class="like-count">{{ $analise->review_likes }}</span>
+                                            </span>
+                                            <span class="cursor-pointer hover-purple">
+                                                <i class="bi bi-chat me-1"></i> 0
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -175,5 +192,58 @@
     inputImagem.addEventListener('input', function () {
         imgPreview.src = this.value;
     });
+
+    $(document).on('click', '.like-button', function () {
+        const span = $(this);
+        const reviewId = span.data('id');
+
+        $.ajax({
+            url: `/review/${reviewId}/like`,
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                const icon = span.find('i');
+                span.find('.like-count').text(response.likes);
+
+                if (response.liked) {
+                    icon.removeClass('bi-heart').addClass('bi-heart-fill text-danger');
+                    span.data('liked', 1);
+                } else {
+                    icon.removeClass('bi-heart-fill text-danger').addClass('bi-heart');
+                    span.data('liked', 0);
+                }
+            },
+            error: function () {
+                console.error('Erro ao enviar like');
+            }
+        });
+    });
+    $(document).on('click', '.btn-confirm-delete', function () {
+        const reviewId = $(this).data('id');
+        const url = $(this).data('url');
+
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            success: function () {
+                $('#modalExcluirReview' + reviewId).modal('hide');
+
+                // Remover o container da análise com segurança
+                $('#modalExcluirReview' + reviewId)
+                    .closest('.card-body')
+                    .remove();
+            },
+            error: function (xhr) {
+                console.error(xhr);
+                alert('Erro ao excluir análise.');
+            }
+        });
+    });
+
 </script>
 @endsection

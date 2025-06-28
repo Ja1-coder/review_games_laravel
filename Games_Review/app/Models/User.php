@@ -20,7 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'user_name',
         'user_email',
-        'user_gametag',
+        'user_gamertag',
         'user_image',
         'password',
     ];
@@ -47,4 +47,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'user_id');
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
 }

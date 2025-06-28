@@ -18,7 +18,7 @@ class SignUpController extends Controller
     {
         $request->validate([
         'name' => 'required|string|max:255',
-        'gametag' => 'required|string|max:255|unique:users,user_gametag',
+        'gametag' => 'required|string|max:255|unique:users,user_gamertag',
         'image' => 'nullable|url',
         'email' => 'required|string|email|max:255|unique:users,user_email',
         'password' => 'required|string|min:6|confirmed',
@@ -26,7 +26,7 @@ class SignUpController extends Controller
 
         User::create([
             'user_name' => $request->name,
-            'user_gametag' => $request->gametag,
+            'user_gamertag' => $request->gametag,
             'user_image' => $request->image,
             'user_email' => $request->email,
             'password' => Hash::make($request->password),
